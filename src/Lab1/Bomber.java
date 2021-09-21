@@ -9,13 +9,14 @@ public class Bomber {
     private int pictureHeight;
     private final int bomberWidth = 220;
     private final int bomberHeight = 138;
-
+    private Bombs bombs;
     public int maxSpeed;
     public boolean isStateBombs;
     public boolean isStateGun;
     public int weight;
     public Color mainColor;
     public Color additionalColor;
+    public int amountBombs;
 
     public Bomber(int maxSpeed, boolean stateBombs, boolean stateGun, int weight, Color mainColor, Color additionalColor) {
         this.maxSpeed = maxSpeed;
@@ -83,15 +84,9 @@ public class Bomber {
 
         if (isStateBombs)
         {
-            // верхние бомбы
-            g.setPaint(additionalColor);
-            g.fillRect(startPosX + 52, startPosY + 40, 10, 10);
-            g.fillRect(startPosX + 67, startPosY + 20, 10, 10);
-
-            // нижние бомбы
-            g.setPaint(additionalColor);
-            g.fillRect(startPosX + 52, startPosY + 90, 10, 10);
-            g.fillRect(startPosX + 67, startPosY + 110, 10, 10);
+            bombs = new Bombs();
+            bombs.setAmountBombs(amountBombs);
+            bombs.drawBombs(g, additionalColor, startPosX, startPosY);
         }
 
         if (isStateGun)
@@ -121,7 +116,5 @@ public class Bomber {
                 new int[]{startPosY + 80, startPosY + 135, startPosY + 135, startPosY + 80},
                 4
         );
-
-        g.drawRect(startPosX, startPosY, bomberWidth, bomberHeight);
     }
 }
