@@ -104,7 +104,6 @@ public class FormBomber extends JFrame {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
-        createUIComponents();
         panel = new JPanel();
         panel.setLayout(new GridBagLayout());
         buttonUp = new JButton();
@@ -184,9 +183,5 @@ public class FormBomber extends JFrame {
      */
     public JComponent $$$getRootComponent$$$() {
         return panel;
-    }
-
-    private void createUIComponents() {
-        // TODO: place custom component creation code here
     }
 }
