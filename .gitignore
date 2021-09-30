@@ -8,6 +8,9 @@
 # AWS User-specific
 .idea/**/aws.xml
 
+# .iml
+technology_program_java.iml
+
 # Generated files
 .idea/**/contentModel.xml
 
