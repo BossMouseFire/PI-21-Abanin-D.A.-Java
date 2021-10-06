@@ -40,6 +40,7 @@ public class FormBomber extends JFrame {
                     Graphics g = panel.getGraphics();
                     Graphics2D graphic2d = (Graphics2D) g;
                     bomber.setPosition(100, 100, 500, 500);
+                    bomber.setAmountBombs(0);
                     bomber.DrawBomber(graphic2d);
                     isCreateBomber = true;
                 }
@@ -76,21 +77,21 @@ public class FormBomber extends JFrame {
         buttonSixBombs.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.amountBombs = 6;
+                bomber.setAmountBombs(6);
                 FormBomber.super.repaint();
             }
         });
         buttonEightBombs.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.amountBombs = 8;
+                bomber.setAmountBombs(8);
                 FormBomber.super.repaint();
             }
         });
         buttonTenBombs.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.amountBombs = 10;
+                bomber.setAmountBombs(10);
                 FormBomber.super.repaint();
             }
         });

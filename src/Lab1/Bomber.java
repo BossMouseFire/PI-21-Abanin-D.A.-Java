@@ -16,7 +16,6 @@ public class Bomber {
     public int weight;
     public Color mainColor;
     public Color additionalColor;
-    public int amountBombs;
 
     public Bomber(int maxSpeed, boolean stateBombs, boolean stateGun, int weight, Color mainColor, Color additionalColor) {
         this.maxSpeed = maxSpeed;
@@ -25,6 +24,7 @@ public class Bomber {
         this.weight = weight;
         this.mainColor = mainColor;
         this.additionalColor = additionalColor;
+        bombs = new Bombs();
     }
 
     public void setPosition(int x, int y, int width, int height){
@@ -32,6 +32,10 @@ public class Bomber {
         startPosY = y;
         this.pictureWidth = width;
         this.pictureHeight = height;
+    }
+
+    public void setAmountBombs(int amountBombs) {
+        bombs.setAmountBombs(amountBombs);
     }
 
     public void Move(MovesBomber movesBomber){
@@ -84,8 +88,6 @@ public class Bomber {
 
         if (isStateBombs)
         {
-            bombs = new Bombs();
-            bombs.setAmountBombs(amountBombs);
             bombs.drawBombs(g, additionalColor, startPosX, startPosY);
         }
 
