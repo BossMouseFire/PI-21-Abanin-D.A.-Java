@@ -1,33 +1,35 @@
-package Lab1;
+package LaboratoriesJava.bombForms;
+
+import LaboratoriesJava.enums.AmountBombs;
+import LaboratoriesJava.interfaces.IBombs;
 
 import java.awt.*;
 
-public class Bombs {
+public class BombsOval implements IBombs {
     private AmountBombs amountBombs;
 
+    @Override
     public void setAmountBombs(int amountBombs) {
         switch (amountBombs){
-            case 0 -> this.amountBombs = AmountBombs.Zero;
             case 6 -> this.amountBombs = AmountBombs.Six;
             case 8 -> this.amountBombs = AmountBombs.Eight;
             case 10 ->  this.amountBombs = AmountBombs.Ten;
             default -> this.amountBombs = AmountBombs.Zero;
         }
-
     }
 
-    private void drawBomb(Graphics2D g, Color additionalColor, int x, int y){
+    private void drawBomb(Graphics2D g, Color additionalColor, int x, int y) {
         g.setPaint(additionalColor);
-        g.fillRect(x, y, 8, 8);
+        g.fillOval(x, y, 8, 8);
     }
 
-    public void drawBombs(Graphics2D g, Color additionalColor, int startPosX, int startPosY){
+    @Override
+    public void drawBombs(Graphics2D g, Color additionalColor, int startPosX, int startPosY) {
         int positionX = 47;
         int positionY = 48;
         int positionYDownBomb = 36;
         int amount;
         switch (amountBombs){
-            case Zero -> amount = 0;
             case Six -> amount = 6;
             case Eight -> amount = 8;
             case Ten -> amount = 10;

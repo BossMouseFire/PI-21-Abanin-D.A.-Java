@@ -1,4 +1,4 @@
-package Lab1;
+package LaboratoriesJava.enums;
 
 public enum MovesBomber {
     Up,

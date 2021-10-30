@@ -1,4 +1,10 @@
-package Lab1;
+package LaboratoriesJava;
+
+import LaboratoriesJava.enums.BombForms;
+import LaboratoriesJava.enums.MovesBomber;
+import LaboratoriesJava.interfaces.ITransport;
+import LaboratoriesJava.transport.Bomber;
+import LaboratoriesJava.transport.Plane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -7,23 +13,22 @@ import java.awt.event.ActionListener;
 
 public class FormBomber extends JFrame {
     private JPanel panel;
-    private JButton createButton;
+    private JButton createPlaneButton;
+    private JButton createBomberButton;
     private JButton buttonUp;
     private JButton buttonDown;
     private JButton buttonLeft;
     private JButton buttonRight;
-    private JButton buttonEightBombs;
-    private JButton buttonTenBombs;
-    private JButton buttonSixBombs;
-    private Bomber bomber;
-    private boolean isCreateBomber;
+    private JButton createBombsRect;
+    private JButton createRocket;
+    private ITransport plane;
 
     @Override
     public void paint(Graphics g) {
         super.paint(g);
-        if (isCreateBomber) {
+        if (plane != null) {
             Graphics2D graphic2d = (Graphics2D) g;
-            bomber.DrawBomber(graphic2d);
+            plane.drawTransport(graphic2d);
         }
     }
 
@@ -32,67 +37,70 @@ public class FormBomber extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().add(panel);
 
-        bomber = new Bomber(2000, true, true, 100, Color.decode("#000000"), Color.decode("#800000"));
-        createButton.addActionListener(new ActionListener() {
+        createPlaneButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!isCreateBomber) {
-                    Graphics g = panel.getGraphics();
-                    Graphics2D graphic2d = (Graphics2D) g;
-                    bomber.setPosition(100, 100, 500, 500);
-                    bomber.setAmountBombs(0);
-                    bomber.DrawBomber(graphic2d);
-                    isCreateBomber = true;
-                }
+                plane = new Plane(2000, 100, Color.decode("#000000"));
+                plane.setPosition(100, 100, 700, 500);
+                repaint();
+            }
+        });
+        createBomberButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                plane = new Bomber(2000,
+                        true, true, 100,
+                        Color.decode("#000000"), Color.decode("#d61e11"), BombForms.Oval);
+                plane.setPosition(100, 100, 700, 500);
+                repaint();
             }
         });
         buttonUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.Move(MovesBomber.Up);
-                FormBomber.super.repaint();
+                plane.moveTransport(MovesBomber.Up);
+                repaint();
             }
         });
         buttonDown.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.Move(MovesBomber.Down);
-                FormBomber.super.repaint();
+                plane.moveTransport(MovesBomber.Down);
+                repaint();
             }
         });
         buttonLeft.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.Move(MovesBomber.Left);
-                FormBomber.super.repaint();
+                plane.moveTransport(MovesBomber.Left);
+                repaint();
             }
         });
         buttonRight.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.Move(MovesBomber.Right);
-                FormBomber.super.repaint();
+                plane.moveTransport(MovesBomber.Right);
+                repaint();
             }
         });
-        buttonSixBombs.addActionListener(new ActionListener() {
+        createRocket.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.setAmountBombs(6);
-                FormBomber.super.repaint();
+                plane = new Bomber(2000,
+                        true, true, 100,
+                        Color.decode("#000000"), Color.decode("#d61e11"), BombForms.Rocket);
+                plane.setPosition(100, 100, 700, 500);
+                repaint();
             }
         });
-        buttonEightBombs.addActionListener(new ActionListener() {
+        createBombsRect.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bomber.setAmountBombs(8);
-                FormBomber.super.repaint();
-            }
-        });
-        buttonTenBombs.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                bomber.setAmountBombs(10);
-                FormBomber.super.repaint();
+                plane = new Bomber(2000,
+                        true, true, 100,
+                        Color.decode("#000000"), Color.decode("#d61e11"), BombForms.Rectangle);
+                plane.setPosition(100, 100, 700, 500);
+                repaint();
             }
         });
     }
@@ -124,15 +132,15 @@ public class FormBomber extends JFrame {
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(buttonDown, gbc);
-        createButton = new JButton();
-        createButton.setEnabled(true);
-        createButton.setText("Создать");
+        createPlaneButton = new JButton();
+        createPlaneButton.setEnabled(true);
+        createPlaneButton.setText("Создать самолёт");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(createButton, gbc);
+        panel.add(createPlaneButton, gbc);
         buttonRight = new JButton();
         buttonRight.setText("Вправо");
         gbc = new GridBagConstraints();
@@ -148,27 +156,6 @@ public class FormBomber extends JFrame {
         gbc.weighty = 20.0;
         gbc.fill = GridBagConstraints.VERTICAL;
         panel.add(spacer1, gbc);
-        buttonEightBombs = new JButton();
-        buttonEightBombs.setText("8 бомб");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(buttonEightBombs, gbc);
-        buttonTenBombs = new JButton();
-        buttonTenBombs.setText("10 бомб");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 4;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(buttonTenBombs, gbc);
-        buttonSixBombs = new JButton();
-        buttonSixBombs.setText("6 бомб");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(buttonSixBombs, gbc);
         buttonLeft = new JButton();
         buttonLeft.setText("Влево");
         gbc = new GridBagConstraints();
@@ -177,6 +164,27 @@ public class FormBomber extends JFrame {
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(buttonLeft, gbc);
+        createBomberButton = new JButton();
+        createBomberButton.setText("Создать бомбардировщик");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(createBomberButton, gbc);
+        createRocket = new JButton();
+        createRocket.setText("Ракеты");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(createRocket, gbc);
+        createBombsRect = new JButton();
+        createBombsRect.setText("Квадратные бомбы");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(createBombsRect, gbc);
     }
 
     /**
@@ -185,4 +193,5 @@ public class FormBomber extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return panel;
     }
+
 }
