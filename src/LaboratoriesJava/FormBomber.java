@@ -31,6 +31,7 @@ public class FormBomber extends JDialog {
             plane.drawTransport(graphic2d);
         }
     }
+
     public FormBomber() {
         super();
         SwingUtilities.invokeLater(new Runnable() {
@@ -108,10 +109,10 @@ public class FormBomber extends JDialog {
         });
     }
 
-    public void setPlane(ITransport plane)
-    {
+    public void setPlane(ITransport plane) {
         this.plane = plane;
         plane.setPosition(50, 50, 700, 500);
         repaint();
     }
+
 }

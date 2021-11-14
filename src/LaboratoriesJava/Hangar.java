@@ -1,14 +1,17 @@
 package LaboratoriesJava;
 
-import LaboratoriesJava.interfaces.IBombs;
 import LaboratoriesJava.interfaces.ITransport;
 import LaboratoriesJava.transport.Bomber;
 import LaboratoriesJava.transport.Plane;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Hangar<T extends Object & ITransport, V extends IBombs> {
-    private final T[] _places;
+public class Hangar<T extends Object & ITransport> {
+    private final List<T> _places;
+
+    private final int _maxCount;
 
     private final int pictureWidth;
 
@@ -21,27 +24,27 @@ public class Hangar<T extends Object & ITransport, V extends IBombs> {
     public Hangar(int picWidth, int picHeight){
         int width = picWidth / _placeSizeWidth;
         int height = picHeight / _placeSizeHeight;
-        _places = (T[]) new Object[width * height];
+        _places = new ArrayList<>();
         pictureWidth = picWidth;
         pictureHeight = picHeight;
+        _maxCount = width * height;
     }
 
-    public int addPlane (T plane)
+    public boolean addPlane (T plane)
     {
-        for (int i = 0; i < _places.length; i++) {
-            if (_places[i] == null) {
-                _places[i] = plane;
-                return i;
-            }
+        if (_places.size() < _maxCount)
+        {
+            _places.add(plane);
+            return true;
         }
-        return -1;
+        return false;
     }
 
     public T removePlane (int index)
     {
-        if (index < _places.length || index > _places.length) {
-            T plane = _places[index];
-            _places[index] = null;
+        if ((index < _maxCount || index > 0) && index < _places.size()) {
+            T plane = _places.get(index);
+            _places.remove(index);
             return plane;
         }
         return null;
@@ -49,11 +52,11 @@ public class Hangar<T extends Object & ITransport, V extends IBombs> {
 
     public int equalsPlane(int index){
         int result = 0;
-        if ((Plane) _places[index] != null){
-            Plane plane = (Plane) _places[index];
+        if ((Plane) _places.get(index) != null){
+            Plane plane = (Plane) _places.get(index);
             result = equalsTypePlane(plane);
-        } else if ((Bomber) _places[index] != null){
-            Bomber bomber = (Bomber) _places[index];
+        } else if ((Bomber) _places.get(index) != null){
+            Bomber bomber = (Bomber) _places.get(index);
             result = equalsTypeBomber(bomber);
         }
         return result - 1;
@@ -61,18 +64,18 @@ public class Hangar<T extends Object & ITransport, V extends IBombs> {
 
     public  int notEqualsPlane(int index){
         int amountNullObjects = 0;
-        for (int i = 0; i < _places.length; i++) {
-            if (_places[i] == null){
+        for (T place : _places) {
+            if (place == null) {
                 amountNullObjects++;
             }
         }
-        return _places.length - equalsPlane(index) - amountNullObjects - 1;
+        return _places.size() - equalsPlane(index) - amountNullObjects - 1;
     }
     public int equalsTypePlane(Plane plane){
         int count = 0;
-        for (int i = 0; i < _places.length; i++) {
-            if(_places[i] != null){
-                Plane plane_i = (Plane) _places[i];
+        for (int i = 0; i < _places.size(); i++) {
+            if(_places.get(i) != null){
+                Plane plane_i = (Plane) _places.get(i);
                 if (plane.mainColor.hashCode() == plane_i.mainColor.hashCode()
                                 && plane.maxSpeed == plane_i.maxSpeed
                                 && plane.weight == plane_i.weight) {
@@ -85,9 +88,9 @@ public class Hangar<T extends Object & ITransport, V extends IBombs> {
 
     public int equalsTypeBomber(Bomber bomber){
         int count = 0;
-        for (int i = 0; i < _places.length; i++) {
-            if(_places[i] != null){
-                Bomber bomber_i = (Bomber) _places[i];
+        for (int i = 0; i < _places.size(); i++) {
+            if(_places.get(i) != null){
+                Bomber bomber_i = (Bomber) _places.get(i);
                 if (bomber.mainColor.hashCode() == bomber_i.mainColor.hashCode()
                         && bomber.maxSpeed == bomber_i.maxSpeed
                         && bomber.weight == bomber_i.weight
@@ -101,15 +104,15 @@ public class Hangar<T extends Object & ITransport, V extends IBombs> {
     public void Draw(Graphics2D g)
     {
         DrawMarking(g);
-        for (int i = 0; i < _places.length; i++) {
-            if(_places[i] != null){
+        for (int i = 0; i < _places.size(); i++) {
+            if(_places.get(i) != null){
                 int indexWidth = pictureWidth / _placeSizeWidth;
                 int indexHeight = pictureHeight / _placeSizeHeight;
-                _places[i].setPosition(
+                _places.get(i).setPosition(
                         _placeSizeWidth * (i % indexWidth),
                         _placeSizeHeight * (i / indexHeight),
                         _placeSizeWidth, _placeSizeHeight);
-                _places[i].drawTransport(g);
+                _places.get(i).drawTransport(g);
             }
         }
     }
@@ -128,5 +131,13 @@ public class Hangar<T extends Object & ITransport, V extends IBombs> {
             g.drawLine(i * _placeSizeWidth, 30, i * _placeSizeWidth,
                     (pictureHeight / _placeSizeHeight) * _placeSizeHeight);
         }
+    }
+
+    public int getSize(){
+        return _places.size();
+    }
+
+    public T getPlane(int index){
+        return _places.get(index);
     }
 }
