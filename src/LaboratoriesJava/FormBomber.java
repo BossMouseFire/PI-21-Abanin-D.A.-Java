@@ -1,10 +1,7 @@
 package LaboratoriesJava;
 
-import LaboratoriesJava.enums.BombForms;
 import LaboratoriesJava.enums.MovesBomber;
 import LaboratoriesJava.interfaces.ITransport;
-import LaboratoriesJava.transport.Bomber;
-import LaboratoriesJava.transport.Plane;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,14 +10,10 @@ import java.awt.event.ActionListener;
 
 public class FormBomber extends JDialog {
     private JPanel panel;
-    private JButton createPlaneButton;
-    private JButton createBomberButton;
     private JButton buttonUp;
     private JButton buttonDown;
     private JButton buttonLeft;
     private JButton buttonRight;
-    private JButton createBombsRect;
-    private JButton createRocket;
     private ITransport plane;
 
     @Override
@@ -40,24 +33,6 @@ public class FormBomber extends JDialog {
             }
         });
 
-        createPlaneButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                plane = new Plane(2000, 100, Color.decode("#000000"));
-                plane.setPosition(100, 100, 700, 500);
-                repaint();
-            }
-        });
-        createBomberButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                plane = new Bomber(2000,
-                        true, true, 100,
-                        Color.decode("#000000"), Color.decode("#d61e11"), BombForms.Oval);
-                plane.setPosition(100, 100, 700, 500);
-                repaint();
-            }
-        });
         buttonUp.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -83,26 +58,6 @@ public class FormBomber extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 plane.moveTransport(MovesBomber.Right);
-                repaint();
-            }
-        });
-        createRocket.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                plane = new Bomber(2000,
-                        true, true, 100,
-                        Color.decode("#000000"), Color.decode("#d61e11"), BombForms.Rocket);
-                plane.setPosition(100, 100, 700, 500);
-                repaint();
-            }
-        });
-        createBombsRect.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                plane = new Bomber(2000,
-                        true, true, 100,
-                        Color.decode("#000000"), Color.decode("#d61e11"), BombForms.Rectangle);
-                plane.setPosition(100, 100, 700, 500);
                 repaint();
             }
         });

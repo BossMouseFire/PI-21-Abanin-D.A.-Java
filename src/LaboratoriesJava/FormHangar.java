@@ -16,9 +16,6 @@ public class FormHangar extends JFrame {
     private JButton buttonSetBomber;
     private JTextField fieldNumberPlane;
     private JButton buttonTakenPlane;
-    private JTextField fieldNumberEqualPlane;
-    private JButton buttonNotEqualsPlane;
-    private JButton buttonEqualsPlane;
 
     private final Hangar<Plane, IBombs> parking;
 
@@ -73,18 +70,6 @@ public class FormHangar extends JFrame {
 
                     repaint();
                 }
-            }
-        });
-        buttonEqualsPlane.addActionListener((e) -> {
-            if (!fieldNumberEqualPlane.getText().equals("")){
-                int numberPlane = Integer.parseInt(fieldNumberEqualPlane.getText());
-                JOptionPane.showMessageDialog(null, "Количество равных переданному объекту самолётов: " + parking.equalsPlane(numberPlane));
-            }
-        });
-        buttonNotEqualsPlane.addActionListener((e) -> {
-            if (!fieldNumberEqualPlane.getText().equals("")){
-                int numberPlane = Integer.parseInt(fieldNumberEqualPlane.getText());
-                JOptionPane.showMessageDialog(null, "Количество не равных переданному объекту самолётов: " + parking.notEqualsPlane(numberPlane));
             }
         });
     }
