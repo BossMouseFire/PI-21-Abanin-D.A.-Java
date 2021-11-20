@@ -1,8 +1,7 @@
 package LaboratoriesJava;
 
 import LaboratoriesJava.interfaces.ITransport;
-import LaboratoriesJava.transport.Bomber;
-import LaboratoriesJava.transport.Plane;
+
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -50,57 +49,6 @@ public class Hangar<T extends Object & ITransport> {
         return null;
     }
 
-    public int equalsPlane(int index){
-        int result = 0;
-        if ((Plane) _places.get(index) != null){
-            Plane plane = (Plane) _places.get(index);
-            result = equalsTypePlane(plane);
-        } else if ((Bomber) _places.get(index) != null){
-            Bomber bomber = (Bomber) _places.get(index);
-            result = equalsTypeBomber(bomber);
-        }
-        return result - 1;
-    }
-
-    public  int notEqualsPlane(int index){
-        int amountNullObjects = 0;
-        for (T place : _places) {
-            if (place == null) {
-                amountNullObjects++;
-            }
-        }
-        return _places.size() - equalsPlane(index) - amountNullObjects - 1;
-    }
-    public int equalsTypePlane(Plane plane){
-        int count = 0;
-        for (int i = 0; i < _places.size(); i++) {
-            if(_places.get(i) != null){
-                Plane plane_i = (Plane) _places.get(i);
-                if (plane.mainColor.hashCode() == plane_i.mainColor.hashCode()
-                                && plane.maxSpeed == plane_i.maxSpeed
-                                && plane.weight == plane_i.weight) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-    public int equalsTypeBomber(Bomber bomber){
-        int count = 0;
-        for (int i = 0; i < _places.size(); i++) {
-            if(_places.get(i) != null){
-                Bomber bomber_i = (Bomber) _places.get(i);
-                if (bomber.mainColor.hashCode() == bomber_i.mainColor.hashCode()
-                        && bomber.maxSpeed == bomber_i.maxSpeed
-                        && bomber.weight == bomber_i.weight
-                        && bomber.additionalColor.hashCode() == bomber_i.additionalColor.hashCode()) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
     public void Draw(Graphics2D g)
     {
         DrawMarking(g);
@@ -133,11 +81,10 @@ public class Hangar<T extends Object & ITransport> {
         }
     }
 
-    public int getSize(){
-        return _places.size();
-    }
-
     public T getPlane(int index){
-        return _places.get(index);
+        if (index >= 0 && index < _places.size()){
+            return _places.get(index);
+        }
+        return null;
     }
 }

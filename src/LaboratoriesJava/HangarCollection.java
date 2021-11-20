@@ -49,10 +49,7 @@ public class HangarCollection {
     public Vehicle getPlaneFromHC(String nameHangar, int index){
         if(hangarStages.containsKey(nameHangar)){
             Hangar<Vehicle> hangar = hangarStages.get(nameHangar);
-            if(index > -1 && index < hangar.getSize()){
-                return hangar.getPlane(index);
-            }
-            return null;
+            return hangar.getPlane(index);
         }
         return null;
     }

@@ -14,11 +14,6 @@ public class FormHangar extends JFrame {
     private JPanel panelInstruments;
     private JButton buttonSetPlane;
     private JButton buttonSetBomber;
-    private JTextField fieldNumberPlane;
-    private JButton buttonTakenPlane;
-    private JTextField fieldNumberEqualPlane;
-    private JButton buttonNotEqualsPlane;
-    private JButton buttonEqualsPlane;
     private JTextField inputHangar;
     private JButton buttonAddHangar;
     DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -73,36 +68,7 @@ public class FormHangar extends JFrame {
                 }
             }
         });
-        buttonTakenPlane.addActionListener((e) -> {
-            if (!fieldNumberPlane.getText().equals("")) {
-                int numberPlane = Integer.parseInt(fieldNumberPlane.getText());
-                Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-                Vehicle transport = hangar.removePlane(numberPlane);
-                if (transport != null) {
-                    FormBomber formBomber = new FormBomber();
-                    formBomber.setPlane(transport);
-                    formBomber.setSize(700, 500);
-                    formBomber.setModal(true);
-                    formBomber.setVisible(true);
 
-                    repaint();
-                }
-            }
-        });
-        buttonEqualsPlane.addActionListener((e) -> {
-            if (!fieldNumberEqualPlane.getText().equals("")) {
-                int numberPlane = Integer.parseInt(fieldNumberEqualPlane.getText());
-                Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-                JOptionPane.showMessageDialog(null, "Количество равных переданному объекту самолётов: " + hangar.equalsPlane(numberPlane));
-            }
-        });
-        buttonNotEqualsPlane.addActionListener((e) -> {
-            if (!fieldNumberEqualPlane.getText().equals("")) {
-                int numberPlane = Integer.parseInt(fieldNumberEqualPlane.getText());
-                Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-                JOptionPane.showMessageDialog(null, "Количество не равных переданному объекту самолётов: " + hangar.notEqualsPlane(numberPlane));
-            }
-        });
         buttonAddHangar.addActionListener((e) -> {
             if (!inputHangar.getText().equals("")) {
                 hangarCollection.addHangar(inputHangar.getText());
@@ -122,14 +88,21 @@ public class FormHangar extends JFrame {
         });
 
         buttonAddList.addActionListener(e -> {
+            int numberPlane = Integer.parseInt(inputPlaneToList.getText());
             Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-            Vehicle plane = hangar.getPlane(Integer.parseInt(inputPlaneToList.getText()));
-            hangarCollection.listPlanes.add(plane);
+            Vehicle plane = hangar.removePlane(numberPlane);
+            if (plane != null){
+                hangarCollection.listPlanes.add(plane);
+                repaint();
+            } else{
+                JOptionPane.showMessageDialog(null,  "Отсутствует выбранный элемент", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         buttonTakeList.addActionListener(e -> {
-            Vehicle transport = hangarCollection.listPlanes.removeLast();
-            if (transport != null) {
+            if (hangarCollection.listPlanes.size() != 0){
+                Vehicle transport = hangarCollection.listPlanes.removeLast();
+
                 FormBomber formBomber = new FormBomber();
                 formBomber.setPlane(transport);
                 formBomber.setSize(700, 500);
@@ -137,6 +110,8 @@ public class FormHangar extends JFrame {
                 formBomber.setVisible(true);
 
                 repaint();
+            } else{
+                JOptionPane.showMessageDialog(null,  "Отсутствует выбранный элемент", "Ошибка", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
