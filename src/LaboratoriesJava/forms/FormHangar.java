@@ -1,5 +1,7 @@
-package LaboratoriesJava;
+package LaboratoriesJava.forms;
 
+import LaboratoriesJava.Hangar;
+import LaboratoriesJava.HangarCollection;
 import LaboratoriesJava.enums.BombForms;
 import LaboratoriesJava.transport.Bomber;
 import LaboratoriesJava.transport.Plane;
@@ -13,7 +15,6 @@ public class FormHangar extends JFrame {
     private JPanel panelHangar;
     private JPanel panelInstruments;
     private JButton buttonSetPlane;
-    private JButton buttonSetBomber;
     private JTextField inputHangar;
     private JButton buttonAddHangar;
     DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -41,30 +42,16 @@ public class FormHangar extends JFrame {
         getContentPane().add(panel);
         hangarCollection = new HangarCollection(700, 500);
         listHangars.setModel(listModel);
+
         buttonSetPlane.addActionListener((e) -> {
-            Color newColor = JColorChooser.showDialog(null, "Выберите цвет", Color.RED);
-            if (newColor != null) {
-                Plane plane = new Plane(500, 100, newColor);
+            FormPlaneConfig formPlaneConfig = new FormPlaneConfig();
+            Vehicle plane = formPlaneConfig.showDialog();
+            if (plane != null) {
                 Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
                 if (hangar.addPlane(plane)) {
                     repaint();
                 } else {
                     JOptionPane.showMessageDialog(null, "Ангар заполнен");
-                }
-            }
-        });
-        buttonSetBomber.addActionListener((e) -> {
-            Color mainColor = JColorChooser.showDialog(null, "Выберите основной цвет", Color.RED);
-            if (mainColor != null) {
-                Color addColor = JColorChooser.showDialog(null, "Выберите дополнительный цвет", Color.RED);
-                if (addColor != null) {
-                    Bomber bomber = new Bomber(500, true, true, 100, mainColor, addColor, BombForms.Rocket);
-                    Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-                    if (hangar.addPlane(bomber)) {
-                        repaint();
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Ангар заполнен");
-                    }
                 }
             }
         });

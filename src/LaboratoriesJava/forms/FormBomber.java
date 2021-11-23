@@ -1,4 +1,4 @@
-package LaboratoriesJava;
+package LaboratoriesJava.forms;
 
 import LaboratoriesJava.enums.MovesBomber;
 import LaboratoriesJava.interfaces.ITransport;

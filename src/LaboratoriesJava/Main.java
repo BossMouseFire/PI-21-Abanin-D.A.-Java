@@ -1,5 +1,7 @@
 package LaboratoriesJava;
 
+import LaboratoriesJava.forms.FormHangar;
+
 public class Main {
     public static void main(String[] args) {
         FormHangar formHangar = new FormHangar();

@@ -21,19 +21,7 @@ public class Bomber extends Plane {
         isStateGun = stateGun;
         this.additionalColor = additionalColor;
 
-        switch (bombForms){
-            case Oval -> {
-                bombs = new BombsOval();
-            }
-            case Rocket -> {
-                bombs = new BombsRocket();
-            }
-            case Rectangle -> {
-                bombs = new BombsRect();
-            }
-        }
-        int rangeRandom = 3 + (int) (Math.random() * 3);
-        bombs.setAmountBombs(rangeRandom * 2);
+        changeBombsType(bombForms);
     }
 
     @Override
@@ -56,5 +44,25 @@ public class Bomber extends Plane {
             g.setPaint(additionalColor);
             g.fillOval(startPosX + 130, startPosY + 30, 20, 20);
         }
+    }
+
+    public void setAddColor(Color additionalColor) {
+        this.additionalColor = additionalColor;
+    }
+
+    public void changeBombsType(BombForms bombForms){
+        switch (bombForms){
+            case Oval -> {
+                bombs = new BombsOval();
+            }
+            case Rocket -> {
+                bombs = new BombsRocket();
+            }
+            case Rectangle -> {
+                bombs = new BombsRect();
+            }
+        }
+        int rangeRandom = 3 + (int) (Math.random() * 3);
+        bombs.setAmountBombs(rangeRandom * 2);
     }
 }

@@ -12,4 +12,5 @@ public interface ITransport {
 
     void drawTransport(Graphics2D g);
 
+    void setMainColor (Color color);
 }

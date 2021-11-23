@@ -24,4 +24,9 @@ public abstract class Vehicle implements ITransport {
     }
     public abstract void drawTransport(Graphics2D g);
     public abstract void moveTransport(MovesBomber movesBomber);
+
+    @Override
+    public void setMainColor(Color mainColor) {
+        this.mainColor = mainColor;
+    }
 }
