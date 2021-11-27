@@ -9,6 +9,11 @@ import LaboratoriesJava.transport.Vehicle;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class FormHangar extends JFrame {
     private JPanel panel;
@@ -23,6 +28,7 @@ public class FormHangar extends JFrame {
     private JButton buttonTakeList;
     private JTextField inputPlaneToList;
     private JButton buttonAddList;
+    private JPanel panelMenu;
 
     private final HangarCollection hangarCollection;
 
@@ -110,4 +116,109 @@ public class FormHangar extends JFrame {
         }
     }
 
+    private JMenu createFileMenu()
+    {
+        JMenu file = new JMenu("Файл");
+        JMenuItem save = new JMenuItem("Сохранить");
+        JMenuItem load = new JMenuItem("Загрузить");
+        JMenuItem saveHangar = new JMenuItem("Сохранить ангар");
+        JMenuItem loadHangar = new JMenuItem("Загрузить ангар");
+        file.add(save);
+        file.addSeparator();
+        file.add(load);
+        file.addSeparator();
+        file.add(saveHangar);
+        file.addSeparator();
+        file.add(loadHangar);
+
+        save.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                JFileChooser fileChooser = new JFileChooser();
+                File file = null;
+                int ret = fileChooser.showDialog(null, "Открыть файл для записи");
+                if(ret == JFileChooser.APPROVE_OPTION){
+                    file = fileChooser.getSelectedFile();
+                }
+                try {
+                    hangarCollection.saveData(file);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        saveHangar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                if (listHangars.getSelectedIndex() > -1) {
+                    JFileChooser fileChooser = new JFileChooser();
+                    File file = null;
+                    int ret = fileChooser.showDialog(null, "Открыть файл для записи");
+                    if(ret == JFileChooser.APPROVE_OPTION){
+                        file = fileChooser.getSelectedFile();
+                    }
+                    try {
+                        hangarCollection.saveDataHangar(file, listHangars.getSelectedValue());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null,  "Выберите ангар", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        load.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                JFileChooser fileChooser = new JFileChooser();
+                File file = null;
+                int ret = fileChooser.showDialog(null, "Открыть файл для чтения");
+                if(ret == JFileChooser.APPROVE_OPTION){
+                    file = fileChooser.getSelectedFile();
+                }
+                try {
+                    boolean result = hangarCollection.loadData(file);
+                    if (result) {
+                        ReloadListModel();
+                        repaint();
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        loadHangar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent arg) {
+                JFileChooser fileChooser = new JFileChooser();
+                File file = null;
+                int ret = fileChooser.showDialog(null, "Открыть файл для чтения");
+                if(ret == JFileChooser.APPROVE_OPTION){
+                    file = fileChooser.getSelectedFile();
+                }
+                try {
+                    boolean result = hangarCollection.loadDataHangar(file);
+                    if (result) {
+                        ReloadListModel();
+                        repaint();
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        return file;
+    }
+
+    private void createUIComponents() {
+        panelMenu = new JPanel();
+        JMenuBar menuBar = new JMenuBar();
+        menuBar.add(createFileMenu());
+        panelMenu.add(menuBar);
+    }
 }

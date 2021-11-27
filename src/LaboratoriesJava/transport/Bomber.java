@@ -24,6 +24,23 @@ public class Bomber extends Plane {
         changeBombsType(bombForms);
     }
 
+    public Bomber(String info)
+    {
+        super(info);
+        String[] strs = info.split(String.valueOf(separator));
+        if (strs.length == 7)
+        {
+            maxSpeed = Integer.parseInt(strs[0]);
+            weight = Integer.parseInt(strs[1]);
+            mainColor = new Color(Integer.parseInt(strs[2]));
+            additionalColor = new Color(Integer.parseInt(strs[3]));
+            isStateBombs = Boolean.parseBoolean(strs[4]);
+            isStateGun = Boolean.parseBoolean(strs[5]);
+            changeBombsType(BombForms.valueOf(strs[6]));
+        }
+    }
+
+
     @Override
     public void drawTransport(Graphics2D g)
     {
@@ -64,5 +81,22 @@ public class Bomber extends Plane {
         }
         int rangeRandom = 3 + (int) (Math.random() * 3);
         bombs.setAmountBombs(rangeRandom * 2);
+    }
+
+    private BombForms changeIBombsToType(IBombs bombs) {
+        if (BombsOval.class.equals(bombs.getClass())) {
+            return BombForms.Oval;
+        } else if(BombsRect.class.equals(bombs.getClass())) {
+            return BombForms.Rectangle;
+        } else{
+            return BombForms.Rocket;
+        }
+    }
+
+    @Override
+    public String toString() {
+        String addColor = Integer.toString(additionalColor.getRGB());
+        BombForms bombForms = changeIBombsToType(bombs);
+        return super.toString() + separator + addColor + separator + isStateBombs + separator + isStateGun + separator + bombForms.toString();
     }
 }

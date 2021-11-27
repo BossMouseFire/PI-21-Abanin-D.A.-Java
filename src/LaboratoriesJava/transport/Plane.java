@@ -9,6 +9,8 @@ public class Plane extends Vehicle {
     protected int planeWidth = 220;
     protected int planeHeight = 138;
 
+    protected final char separator = ';';
+
     public Plane(int maxSpeed, int weight, Color mainColor)
     {
         this.maxSpeed = maxSpeed;
@@ -23,6 +25,17 @@ public class Plane extends Vehicle {
         this.mainColor = mainColor;
         this.planeWidth = planeWidth;
         this.planeHeight = planeHeight;
+    }
+
+    public Plane(String info)
+    {
+        String[] strs = info.split(String.valueOf(separator));
+        if (strs.length == 3)
+        {
+            maxSpeed = Integer.parseInt(strs[0]);
+            weight = Integer.parseInt(strs[1]);
+            mainColor = new Color(Integer.parseInt(strs[2]));
+        }
     }
 
     @Override
@@ -87,5 +100,11 @@ public class Plane extends Vehicle {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        String color = Integer.toString(mainColor.getRGB());
+        return String.format("%s%s%s%s%s", maxSpeed, separator, weight, separator, color);
     }
 }
