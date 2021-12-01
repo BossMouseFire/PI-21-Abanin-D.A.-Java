@@ -92,10 +92,13 @@ public class HangarCollection {
         writer.write(String.format("Hangar%s%s\n", separator, name));
         ITransport plane;
         Hangar<Vehicle> hangar = getHangar(name);
+
+        if (hangar == null) {
+            return;
+        }
+
         for (int i = 0; (plane = hangar.getPlane(i)) != null; i++)
         {
-            //если место не пустое
-            //Записываем тип машины
             if (plane.getClass() == Plane.class)
             {
                 writer.write(String.format("Plane%s", separator));
@@ -117,9 +120,13 @@ public class HangarCollection {
         String key;
         if (line.contains("Hangar") ) {
             key = line.split(String.valueOf(separator))[1];
-            hangarStages.remove(key);
-            hangarStages.put(key, new Hangar<>(pictureWidth,
-                    pictureHeight));
+            Hangar<Vehicle> hangar = hangarStages.get(key);
+            if (hangar != null) {
+                hangar.clearHangar();
+            } else {
+                hangarStages.put(key, new Hangar<>(pictureWidth,
+                        pictureHeight));
+            }
         } else{
             return false;
         }

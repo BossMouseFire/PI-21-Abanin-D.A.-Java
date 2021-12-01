@@ -49,6 +49,10 @@ public class Hangar<T extends Object & ITransport> {
         return null;
     }
 
+    public void clearHangar() {
+        _places.clear();
+    }
+
     public void Draw(Graphics2D g)
     {
         DrawMarking(g);

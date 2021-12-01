@@ -163,7 +163,8 @@ public class FormHangar extends JFrame {
                     }
                     try {
                         hangarCollection.saveDataHangar(file, listHangars.getSelectedValue());
-                    } catch (Exception e) {
+                    }
+                    catch (Exception e) {
                         JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else {
