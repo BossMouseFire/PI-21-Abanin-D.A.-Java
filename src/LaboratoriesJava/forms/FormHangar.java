@@ -51,15 +51,17 @@ public class FormHangar extends JFrame {
 
         buttonSetPlane.addActionListener((e) -> {
             FormPlaneConfig formPlaneConfig = new FormPlaneConfig();
-            Vehicle plane = formPlaneConfig.showDialog();
-            if (plane != null) {
-                Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-                if (hangar.addPlane(plane)) {
-                    repaint();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Ангар заполнен");
+            formPlaneConfig.addEvent(plane -> {
+                if (plane != null) {
+                    Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
+                    if (hangar.addPlane(plane)) {
+                        repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Ангар заполнен");
+                    }
                 }
-            }
+            });
+            formPlaneConfig.showDialog();
         });
 
         buttonAddHangar.addActionListener((e) -> {
@@ -143,8 +145,8 @@ public class FormHangar extends JFrame {
                 }
                 try {
                     hangarCollection.saveData(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -161,8 +163,8 @@ public class FormHangar extends JFrame {
                     }
                     try {
                         hangarCollection.saveDataHangar(file, listHangars.getSelectedValue());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null,  "Выберите ангар", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -185,8 +187,8 @@ public class FormHangar extends JFrame {
                         ReloadListModel();
                         repaint();
                     }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });
@@ -206,8 +208,8 @@ public class FormHangar extends JFrame {
                         ReloadListModel();
                         repaint();
                     }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         });

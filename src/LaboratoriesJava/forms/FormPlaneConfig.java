@@ -1,14 +1,13 @@
 package LaboratoriesJava.forms;
 
 import LaboratoriesJava.enums.BombForms;
+import LaboratoriesJava.interfaces.Eventual;
 import LaboratoriesJava.transport.Bomber;
 import LaboratoriesJava.transport.Plane;
 import LaboratoriesJava.transport.Vehicle;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -34,6 +33,8 @@ public class FormPlaneConfig extends JDialog {
     BombForms bombForms = null;
     private Vehicle plane = null;
 
+    private Eventual eventParkPlane;
+
     public void paint(Graphics g) {
         super.paint(g);
         if (plane != null) {
@@ -52,8 +53,11 @@ public class FormPlaneConfig extends JDialog {
             }
         });
         buttonAddPlane.addActionListener(e -> {
-            setVisible(false);
-            dispose();
+            if (eventParkPlane != null && plane != null) {
+                eventParkPlane.parkPlane(plane);
+                setVisible(false);
+                dispose();
+            }
         });
         buttonClose.addActionListener(e -> {
             plane = null;
@@ -62,11 +66,10 @@ public class FormPlaneConfig extends JDialog {
         });
     }
 
-    public Vehicle showDialog(){
+    public void showDialog(){
         setSize(700, 500);
         setModal(true);
         setVisible(true);
-        return plane;
     }
 
     private void initUI(){
@@ -125,16 +128,20 @@ public class FormPlaneConfig extends JDialog {
         labelMainColor.setTransferHandler(new TransferHandler("background"));
         labelMainColor.addPropertyChangeListener("background", propertyChangeEvent -> {
             Color color = (Color) propertyChangeEvent.getNewValue();
-            plane.setMainColor(color);
-            repaint();
+            if (plane != null) {
+                plane.setMainColor(color);
+                repaint();
+            }
         });
 
         labelAddColor.setTransferHandler(new TransferHandler("background"));
         labelAddColor.addPropertyChangeListener("background", propertyChangeEvent -> {
             Color color = (Color) propertyChangeEvent.getNewValue();
-            Bomber bomber = (Bomber) plane;
-            bomber.setAddColor(color);
-            repaint();
+            if (plane != null && plane instanceof Bomber) {
+                Bomber bomber = (Bomber) plane;
+                bomber.setAddColor(color);
+                repaint();
+            }
         });
 
         checkBoxRadar.addActionListener(e -> {
@@ -173,7 +180,9 @@ public class FormPlaneConfig extends JDialog {
                 var c = (JComponent) e.getSource();
                 var handler = c.getTransferHandler();
                 handler.exportAsDrag(c, e, TransferHandler.COPY);
-                bombForms = BombForms.Oval;
+                if (plane != null && plane instanceof Bomber) {
+                    bombForms = BombForms.Oval;
+                }
             }
         });
 
@@ -184,7 +193,9 @@ public class FormPlaneConfig extends JDialog {
                 var c = (JComponent) e.getSource();
                 var handler = c.getTransferHandler();
                 handler.exportAsDrag(c, e, TransferHandler.COPY);
-                bombForms = BombForms.Rectangle;
+                if (plane != null && plane instanceof Bomber) {
+                    bombForms = BombForms.Rectangle;
+                }
             }
         });
 
@@ -195,9 +206,14 @@ public class FormPlaneConfig extends JDialog {
                 var c = (JComponent) e.getSource();
                 var handler = c.getTransferHandler();
                 handler.exportAsDrag(c, e, TransferHandler.COPY);
-                bombForms = BombForms.Rocket;
+                if (plane != null && plane instanceof Bomber) {
+                    bombForms = BombForms.Rocket;
+                }
             }
         });
     }
 
+    public void addEvent(Eventual event) {
+        eventParkPlane = event;
+    }
 }
