@@ -45,15 +45,17 @@ public class FormHangar extends JFrame {
 
         buttonSetPlane.addActionListener((e) -> {
             FormPlaneConfig formPlaneConfig = new FormPlaneConfig();
-            Vehicle plane = formPlaneConfig.showDialog();
-            if (plane != null) {
-                Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-                if (hangar.addPlane(plane)) {
-                    repaint();
-                } else {
-                    JOptionPane.showMessageDialog(null, "Ангар заполнен");
+            formPlaneConfig.addEvent(plane -> {
+                if (plane != null) {
+                    Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
+                    if (hangar.addPlane(plane)) {
+                        repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Ангар заполнен");
+                    }
                 }
-            }
+            });
+            formPlaneConfig.showDialog();
         });
 
         buttonAddHangar.addActionListener((e) -> {
