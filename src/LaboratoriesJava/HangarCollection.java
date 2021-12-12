@@ -1,10 +1,15 @@
 package LaboratoriesJava;
+import LaboratoriesJava.customExcep.HangarOverflowException;
 import LaboratoriesJava.interfaces.ITransport;
 import LaboratoriesJava.transport.Bomber;
 import LaboratoriesJava.transport.Plane;
 import LaboratoriesJava.transport.Vehicle;
 
 import java.io.*;
+import java.lang.reflect.Type;
+import java.nio.file.FileAlreadyExistsException;
+import java.security.KeyStore;
+import java.util.FormatterClosedException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -19,6 +24,7 @@ public class HangarCollection {
     private final int pictureHeight;
 
     protected final char separator = ':';
+
 
     public HangarCollection(int pictureWidth, int pictureHeight)
     {
@@ -113,8 +119,14 @@ public class HangarCollection {
         writer.close();
     }
 
-    public boolean loadDataHangar(File file) throws FileNotFoundException {
-        FileReader fileReader = new FileReader(file);
+    public void loadDataHangar(File file) throws IOException, HangarOverflowException {
+        FileReader fileReader;
+        if (file.isFile()) {
+            fileReader = new FileReader(file);
+        } else {
+            throw new IOException("Файл не найден");
+        }
+
         Scanner scannerFile = new Scanner(fileReader);
         String line = scannerFile.nextLine();
         String key;
@@ -128,7 +140,7 @@ public class HangarCollection {
                         pictureHeight));
             }
         } else{
-            return false;
+            throw new IOException("Неверный формат файла");
         }
         while (scannerFile.hasNextLine()) {
             line = scannerFile.nextLine();
@@ -152,24 +164,30 @@ public class HangarCollection {
                 var result = hangarStages.get(key).addPlane(plane);
                 if (!result)
                 {
-                    return false;
+                    throw new IOException("Не удалось загрузить самолёт в ангар");
                 }
             }
         }
-        return true;
     }
-    public boolean loadData(File file) throws FileNotFoundException {
-        FileReader fileReader = new FileReader(file);
+    public void loadData(File file) throws IOException, HangarOverflowException {
+        FileReader fileReader;
+        if (file.isFile()) {
+            fileReader = new FileReader(file);
+        } else {
+            throw new IOException("Файл не найден");
+        }
+
         Scanner scannerFile = new Scanner(fileReader);
         String key = "";
         String line = scannerFile.nextLine();
+
         if (line.contains("HangarCollection"))
         {
             hangarStages.clear();
         }
         else
         {
-            return false;
+            throw new IOException("Неверный формат файла");
         }
         while (scannerFile.hasNextLine()){
             line = scannerFile.nextLine();
@@ -201,11 +219,10 @@ public class HangarCollection {
                 var result = hangarStages.get(key).addPlane(plane);
                 if (!result)
                 {
-                    return false;
+                    throw new IOException("Не удалось загрузить самолёт в ангар");
                 }
             }
         }
-        return true;
     }
 
 }

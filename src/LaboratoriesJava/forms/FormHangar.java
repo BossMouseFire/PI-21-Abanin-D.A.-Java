@@ -2,18 +2,21 @@ package LaboratoriesJava.forms;
 
 import LaboratoriesJava.Hangar;
 import LaboratoriesJava.HangarCollection;
+import LaboratoriesJava.customExcep.HangarNotFoundException;
+import LaboratoriesJava.customExcep.HangarOverflowException;
 import LaboratoriesJava.enums.BombForms;
 import LaboratoriesJava.transport.Bomber;
 import LaboratoriesJava.transport.Plane;
 import LaboratoriesJava.transport.Vehicle;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+
 
 public class FormHangar extends JFrame {
     private JPanel panel;
@@ -32,6 +35,7 @@ public class FormHangar extends JFrame {
 
     private final HangarCollection hangarCollection;
 
+    private static final Logger logger = Logger.getLogger(FormHangar.class);
 
     @Override
     public void paint(Graphics g) {
@@ -54,10 +58,18 @@ public class FormHangar extends JFrame {
             formPlaneConfig.addEvent(plane -> {
                 if (plane != null) {
                     Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-                    if (hangar.addPlane(plane)) {
+                    try {
+                        hangar.addPlane(plane);
+                        logger.info("Добавление в ангар " + listHangars.getSelectedValue() + " самолёт " + plane);
                         repaint();
-                    } else {
+                    }
+                    catch (HangarOverflowException ex) {
+                        logger.warn("Ошибка при добавлении в ангар " + listHangars.getSelectedValue() + ": " + ex.getMessage());
                         JOptionPane.showMessageDialog(null, "Ангар заполнен");
+                    }
+                    catch (Exception ex) {
+                        logger.fatal("Неизвестная ошибка при добавлении в ангар: " + ex.getMessage());
+                        JOptionPane.showMessageDialog(null, "Неизвестная ошибка при добавлении");
                     }
                 }
             });
@@ -67,12 +79,14 @@ public class FormHangar extends JFrame {
         buttonAddHangar.addActionListener((e) -> {
             if (!inputHangar.getText().equals("")) {
                 hangarCollection.addHangar(inputHangar.getText());
+                logger.info("Добавили парковку "  + inputHangar.getText());
                 ReloadListModel();
                 listHangars.updateUI();
             }
         });
         buttonDelHangar.addActionListener((e) -> {
             hangarCollection.delHangar(listHangars.getSelectedValue());
+            logger.info("Удалили ангар " + listHangars.getSelectedValue());
             ReloadListModel();
             listHangars.updateUI();
             repaint();
@@ -85,25 +99,33 @@ public class FormHangar extends JFrame {
         buttonAddList.addActionListener(e -> {
             int numberPlane = Integer.parseInt(inputPlaneToList.getText());
             Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
-            Vehicle plane = hangar.removePlane(numberPlane);
-            if (plane != null){
+
+            try {
+                Vehicle plane = hangar.removePlane(numberPlane);
                 hangarCollection.listPlanes.add(plane);
+                logger.info("Добавление самолёта в список: " + plane);
                 repaint();
-            } else{
-                JOptionPane.showMessageDialog(null,  "Отсутствует выбранный элемент", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
+            catch (HangarNotFoundException ex) {
+                logger.warn("Ошибка при добавлении самолёта в список: " + ex.getMessage());
+                JOptionPane.showMessageDialog(null,  "Отсутствует элемент под индексом " + numberPlane, "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
+            catch (Exception ex) {
+                logger.fatal("Неизвестная Ошибка при добавлении самолёта в список: "  + ex.getMessage());
+                JOptionPane.showMessageDialog(null,  "Неизвестная ошибка", "Ошибка", JOptionPane.ERROR_MESSAGE);
             }
         });
 
         buttonTakeList.addActionListener(e -> {
             if (hangarCollection.listPlanes.size() != 0){
                 Vehicle transport = hangarCollection.listPlanes.removeLast();
+                logger.info("Изъятие самолёта из списка: " + transport);
 
                 FormBomber formBomber = new FormBomber();
                 formBomber.setPlane(transport);
                 formBomber.setSize(700, 500);
                 formBomber.setModal(true);
                 formBomber.setVisible(true);
-
                 repaint();
             } else{
                 JOptionPane.showMessageDialog(null,  "Отсутствует выбранный элемент", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -120,18 +142,18 @@ public class FormHangar extends JFrame {
 
     private JMenu createFileMenu()
     {
-        JMenu file = new JMenu("Файл");
+        JMenu fileMenu = new JMenu("Файл");
         JMenuItem save = new JMenuItem("Сохранить");
         JMenuItem load = new JMenuItem("Загрузить");
         JMenuItem saveHangar = new JMenuItem("Сохранить ангар");
         JMenuItem loadHangar = new JMenuItem("Загрузить ангар");
-        file.add(save);
-        file.addSeparator();
-        file.add(load);
-        file.addSeparator();
-        file.add(saveHangar);
-        file.addSeparator();
-        file.add(loadHangar);
+        fileMenu.add(save);
+        fileMenu.addSeparator();
+        fileMenu.add(load);
+        fileMenu.addSeparator();
+        fileMenu.add(saveHangar);
+        fileMenu.addSeparator();
+        fileMenu.add(loadHangar);
 
         save.addActionListener(new ActionListener()
         {
@@ -145,8 +167,15 @@ public class FormHangar extends JFrame {
                 }
                 try {
                     hangarCollection.saveData(file);
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("Сохранён файл");
+                }
+                catch (IOException ex) {
+                    logger.error("Ошибка при сохранении файла: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(null,  ex.getMessage(), "Информация", JOptionPane.ERROR_MESSAGE);
+                }
+                catch (Exception ex) {
+                    logger.fatal("Неизвестная ошибка при сохранении файла: " + ex.getMessage());
+                    JOptionPane.showMessageDialog(null,  "Неизвестная ошибка", "Информация", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -163,9 +192,15 @@ public class FormHangar extends JFrame {
                     }
                     try {
                         hangarCollection.saveDataHangar(file, listHangars.getSelectedValue());
+                        logger.info("Сохранён ангар");
                     }
-                    catch (Exception e) {
-                        JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                    catch (IOException ex) {
+                        logger.error("Ошибка при сохранении ангара: " + ex.getMessage());
+                        JOptionPane.showMessageDialog(null,  ex.getMessage(), "Информация", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                    catch (Exception ex) {
+                        logger.fatal("Неизвестная Ошибка при сохранении ангара: " + ex.getMessage());
+                        JOptionPane.showMessageDialog(null,  "Неизвестная ошибка", "Информация", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null,  "Выберите ангар", "Ошибка", JOptionPane.ERROR_MESSAGE);
@@ -183,13 +218,22 @@ public class FormHangar extends JFrame {
                     file = fileChooser.getSelectedFile();
                 }
                 try {
-                    boolean result = hangarCollection.loadData(file);
-                    if (result) {
-                        ReloadListModel();
-                        repaint();
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                    hangarCollection.loadData(file);
+                    logger.info("Загрузка файла");
+                    ReloadListModel();
+                    repaint();
+                }
+                catch (HangarOverflowException ex) {
+                    logger.warn("Ошибка при загрузке ангара: " + ex);
+                    JOptionPane.showMessageDialog(null,  "При загрузке ангар был переполен", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+                }
+                catch (IOException ex) {
+                    logger.error("Ошибка при загрузке файла: " + ex);
+                    JOptionPane.showMessageDialog(null,  ex.getMessage(), "Предупреждение", JOptionPane.WARNING_MESSAGE);
+                }
+                catch (Exception ex) {
+                    logger.fatal("Неизвестная ошибка при загрузке файла: " + ex);
+                    JOptionPane.showMessageDialog(null,  "Неизвестная ошибка", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -204,18 +248,27 @@ public class FormHangar extends JFrame {
                     file = fileChooser.getSelectedFile();
                 }
                 try {
-                    boolean result = hangarCollection.loadDataHangar(file);
-                    if (result) {
-                        ReloadListModel();
-                        repaint();
-                    }
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null,  "Файл не выбран", "Информация", JOptionPane.INFORMATION_MESSAGE);
+                    hangarCollection.loadDataHangar(file);
+                    logger.info("Загрузка ангара");
+                    ReloadListModel();
+                    repaint();
+                }
+                catch (HangarOverflowException ex) {
+                    logger.warn("Ошибка при загрузке ангара: " + ex);
+                    JOptionPane.showMessageDialog(null,  "При загрузке ангар был переполен", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+                }
+                catch (IOException ex) {
+                    logger.error("Ошибка при загрузке ангара: " + ex);
+                    JOptionPane.showMessageDialog(null,  ex.getMessage(), "Предупреждение", JOptionPane.WARNING_MESSAGE);
+                }
+                catch (Exception ex) {
+                    logger.fatal("Неизвестная ошибка при загрузке ангара: " + ex);
+                    JOptionPane.showMessageDialog(null,  "Неизвестная ошибка", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
 
-        return file;
+        return fileMenu;
     }
 
     private void createUIComponents() {

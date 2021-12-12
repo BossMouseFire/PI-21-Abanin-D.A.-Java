@@ -1,5 +1,7 @@
 package LaboratoriesJava;
 
+import LaboratoriesJava.customExcep.HangarNotFoundException;
+import LaboratoriesJava.customExcep.HangarOverflowException;
 import LaboratoriesJava.interfaces.ITransport;
 
 
@@ -29,24 +31,21 @@ public class Hangar<T extends Object & ITransport> {
         _maxCount = width * height;
     }
 
-    public boolean addPlane (T plane)
-    {
-        if (_places.size() < _maxCount)
-        {
-            _places.add(plane);
-            return true;
+    public boolean addPlane (T plane) throws HangarOverflowException {
+        if (_places.size() >= _maxCount) {
+            throw new HangarOverflowException();
         }
-        return false;
+        _places.add(plane);
+        return true;
     }
 
-    public T removePlane (int index)
-    {
-        if ((index < _maxCount || index > 0) && index < _places.size()) {
-            T plane = _places.get(index);
-            _places.remove(index);
-            return plane;
+    public T removePlane (int index) throws HangarNotFoundException {
+        if (index < 0  || index >= _places.size()) {
+           throw new HangarNotFoundException(index);
         }
-        return null;
+        T plane = _places.get(index);
+        _places.remove(index);
+        return plane;
     }
 
     public void clearHangar() {

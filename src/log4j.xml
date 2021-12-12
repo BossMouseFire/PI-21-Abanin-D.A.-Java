@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="true"
+                     xmlns:log4j="http://jakarta.apache.org/log4j/">
+    <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
+        <param name="maxFileSize" value="1MB"/>
+        <param name="maxBackupIndex" value="2" />
+        <param name="file" value="./logFile.log" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} - %m%n"/>
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelMatchFilter">
+            <param name="LevelToMatch" value="INFO" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+        <filter class="org.apache.log4j.varia.LevelMatchFilter">
+            <param name="LevelToMatch" value="WARN" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+        <filter class="org.apache.log4j.varia.LevelMatchFilter">
+            <param name="LevelToMatch" value="ERROR" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+        <filter class="org.apache.log4j.varia.DenyAllFilter" />
+    </appender>
+
+    <appender name="mailAppender"
+              class="org.apache.log4j.net.SMTPAppender">
+        <param name="BufferSize" value="512" />
+        <param name="SMTPHost" value="smtp.yandex.ru" />
+        <param name="SMTPPort" value="465" />
+        <param name="SMTPUsername" value="abanindanila@yandex.ru" />
+        <param name="SMTPPassword" value="zbfgliktffdwevzo" />
+        <param name="From" value="abanindanila@yandex.ru" />
+        <param name="To" value="dabanin499@gmail.com" />
+        <param name="Subject" value="Log4j mail notification" />
+        <param name="SMTPDebug" value="true" />
+        <param name="SMTPProtocol" value="smtps" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                   value="[%p] %m  Date:%d{dd.MM.yyyy}%n" />
+        </layout>
+        <filter class="org.apache.log4j.varia.LevelMatchFilter">
+            <param name="LevelToMatch" value="FATAL" />
+            <param name="AcceptOnMatch" value="true" />
+        </filter>
+        <filter class="org.apache.log4j.varia.DenyAllFilter" />
+    </appender>
+
+    <root>
+        <priority value="INFO" />
+        <appender-ref ref="fileAppender" />
+        <appender-ref ref="mailAppender" />
+    </root>
+</log4j:configuration>
