@@ -2,6 +2,7 @@ package LaboratoriesJava.forms;
 
 import LaboratoriesJava.Hangar;
 import LaboratoriesJava.HangarCollection;
+import LaboratoriesJava.customExcep.HangarAlreadyHaveException;
 import LaboratoriesJava.customExcep.HangarNotFoundException;
 import LaboratoriesJava.customExcep.HangarOverflowException;
 import LaboratoriesJava.enums.BombForms;
@@ -32,6 +33,7 @@ public class FormHangar extends JFrame {
     private JTextField inputPlaneToList;
     private JButton buttonAddList;
     private JPanel panelMenu;
+    private JButton buttonSort;
 
     private final HangarCollection hangarCollection;
 
@@ -63,19 +65,30 @@ public class FormHangar extends JFrame {
                         logger.info("Добавление в ангар " + listHangars.getSelectedValue() + " самолёт " + plane);
                         repaint();
                     }
+                    catch (HangarAlreadyHaveException ex) {
+                        logger.warn("Такой самолёт уже находится в ангаре: " + plane);
+                        JOptionPane.showMessageDialog(null, "Такой самолёт уже находится в ангаре", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    }
                     catch (HangarOverflowException ex) {
                         logger.warn("Ошибка при добавлении в ангар " + listHangars.getSelectedValue() + ": " + ex.getMessage());
-                        JOptionPane.showMessageDialog(null, "Ангар заполнен");
+                        JOptionPane.showMessageDialog(null, "Ангар заполнен", "Ошибка", JOptionPane.ERROR_MESSAGE);
                     }
                     catch (Exception ex) {
                         logger.fatal("Неизвестная ошибка при добавлении в ангар: " + ex.getMessage());
-                        JOptionPane.showMessageDialog(null, "Неизвестная ошибка при добавлении");
+                        JOptionPane.showMessageDialog(null, "Неизвестная ошибка при добавлении", "Ошибка", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             });
             formPlaneConfig.showDialog();
         });
-
+        buttonSort.addActionListener((e) -> {
+            Hangar<Vehicle> hangar = hangarCollection.getHangar(listHangars.getSelectedValue());
+            if (hangar != null) {
+                hangar.sort();
+                repaint();
+                logger.info("Сортировка ангара: " + hangar);
+            }
+        });
         buttonAddHangar.addActionListener((e) -> {
             if (!inputHangar.getText().equals("")) {
                 hangarCollection.addHangar(inputHangar.getText());
@@ -227,6 +240,10 @@ public class FormHangar extends JFrame {
                     logger.warn("Ошибка при загрузке ангара: " + ex);
                     JOptionPane.showMessageDialog(null,  "При загрузке ангар был переполен", "Предупреждение", JOptionPane.WARNING_MESSAGE);
                 }
+                catch (HangarAlreadyHaveException ex) {
+                    logger.warn("Самолёт уже находится в ангаре: ");
+                    JOptionPane.showMessageDialog(null, "Такой самолёт уже находится в ангаре", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                }
                 catch (IOException ex) {
                     logger.error("Ошибка при загрузке файла: " + ex);
                     JOptionPane.showMessageDialog(null,  ex.getMessage(), "Предупреждение", JOptionPane.WARNING_MESSAGE);
@@ -256,6 +273,10 @@ public class FormHangar extends JFrame {
                 catch (HangarOverflowException ex) {
                     logger.warn("Ошибка при загрузке ангара: " + ex);
                     JOptionPane.showMessageDialog(null,  "При загрузке ангар был переполен", "Предупреждение", JOptionPane.WARNING_MESSAGE);
+                }
+                catch (HangarAlreadyHaveException ex) {
+                    logger.warn("Самолёт уже находится в ангаре: ");
+                    JOptionPane.showMessageDialog(null, "Такой самолёт уже находится в ангаре", "Ошибка", JOptionPane.ERROR_MESSAGE);
                 }
                 catch (IOException ex) {
                     logger.error("Ошибка при загрузке ангара: " + ex);

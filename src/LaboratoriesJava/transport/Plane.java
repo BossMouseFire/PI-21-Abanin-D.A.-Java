@@ -4,7 +4,7 @@ import LaboratoriesJava.enums.MovesBomber;
 
 import java.awt.*;
 
-public class Plane extends Vehicle {
+public class Plane extends Vehicle implements Comparable<Plane> {
 
     protected int planeWidth = 220;
     protected int planeHeight = 138;
@@ -106,5 +106,32 @@ public class Plane extends Vehicle {
     public String toString() {
         String color = Integer.toString(mainColor.getRGB());
         return String.format("%s%s%s%s%s", maxSpeed, separator, weight, separator, color);
+    }
+
+    @Override
+    public int compareTo(Plane o) {
+        if (maxSpeed != o.maxSpeed)
+        {
+            return maxSpeed > o.maxSpeed ? 1 : -1;
+        }
+        if (weight != o.weight)
+        {
+            return weight > o.weight ? 1 : -1;
+        }
+        if (mainColor.hashCode() != o.mainColor.hashCode())
+        {
+            return mainColor.hashCode() > o.mainColor.hashCode() ? 1 : -1;
+        }
+        return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Plane plane = (Plane) o;
+        return maxSpeed == plane.maxSpeed
+                && weight == plane.weight
+                && mainColor.hashCode() == plane.mainColor.hashCode();
     }
 }

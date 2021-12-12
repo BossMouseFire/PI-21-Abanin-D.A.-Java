@@ -5,8 +5,9 @@ import LaboratoriesJava.enums.BombForms;
 import LaboratoriesJava.interfaces.IBombs;
 
 import java.awt.*;
+import java.util.Objects;
 
-public class Bomber extends Plane {
+public class Bomber extends Plane implements Comparable<Plane> {
 
     public IBombs bombs;
     public boolean isStateBombs;
@@ -98,5 +99,38 @@ public class Bomber extends Plane {
         String addColor = Integer.toString(additionalColor.getRGB());
         BombForms bombForms = changeIBombsToType(bombs);
         return super.toString() + separator + addColor + separator + isStateBombs + separator + isStateGun + separator + bombForms.toString();
+    }
+
+    public int compareTo(Bomber o) {
+
+        if (additionalColor != o.additionalColor)
+        {
+            return additionalColor.hashCode() > o.additionalColor.hashCode() ? 1 : -1;
+        }
+        if (isStateBombs != o.isStateBombs)
+        {
+            return isStateBombs ? 1 : -1;
+        }
+        if (isStateGun != o.isStateGun)
+        {
+            return isStateGun  ? 1 : -1;
+        }
+        if (bombs.getClass() != bombs.getClass()) {
+            return 1;
+        }
+
+        return super.compareTo(o);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Bomber bomber = (Bomber) o;
+        return isStateBombs == bomber.isStateBombs
+                && isStateGun == bomber.isStateGun
+                && bombs.getClass() == bomber.bombs.getClass()
+                && additionalColor.hashCode() == bomber.additionalColor.hashCode();
     }
 }

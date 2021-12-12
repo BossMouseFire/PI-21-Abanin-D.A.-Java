@@ -1,4 +1,5 @@
 package LaboratoriesJava;
+import LaboratoriesJava.customExcep.HangarAlreadyHaveException;
 import LaboratoriesJava.customExcep.HangarOverflowException;
 import LaboratoriesJava.interfaces.ITransport;
 import LaboratoriesJava.transport.Bomber;
@@ -119,7 +120,7 @@ public class HangarCollection {
         writer.close();
     }
 
-    public void loadDataHangar(File file) throws IOException, HangarOverflowException {
+    public void loadDataHangar(File file) throws IOException, HangarOverflowException, HangarAlreadyHaveException {
         FileReader fileReader;
         if (file.isFile()) {
             fileReader = new FileReader(file);
@@ -169,7 +170,7 @@ public class HangarCollection {
             }
         }
     }
-    public void loadData(File file) throws IOException, HangarOverflowException {
+    public void loadData(File file) throws IOException, HangarOverflowException, HangarAlreadyHaveException {
         FileReader fileReader;
         if (file.isFile()) {
             fileReader = new FileReader(file);

@@ -1,5 +1,6 @@
 package LaboratoriesJava;
 
+import LaboratoriesJava.customExcep.HangarAlreadyHaveException;
 import LaboratoriesJava.customExcep.HangarNotFoundException;
 import LaboratoriesJava.customExcep.HangarOverflowException;
 import LaboratoriesJava.interfaces.ITransport;
@@ -7,6 +8,8 @@ import LaboratoriesJava.interfaces.ITransport;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class Hangar<T extends Object & ITransport> {
@@ -31,9 +34,13 @@ public class Hangar<T extends Object & ITransport> {
         _maxCount = width * height;
     }
 
-    public boolean addPlane (T plane) throws HangarOverflowException {
+    public boolean addPlane (T plane) throws HangarOverflowException, HangarAlreadyHaveException {
         if (_places.size() >= _maxCount) {
             throw new HangarOverflowException();
+        }
+        if (_places.contains(plane))
+        {
+            throw new HangarAlreadyHaveException();
         }
         _places.add(plane);
         return true;
@@ -89,5 +96,9 @@ public class Hangar<T extends Object & ITransport> {
             return _places.get(index);
         }
         return null;
+    }
+
+    public void sort() {
+        _places.sort((Comparator<? super T>) new PlaneComparator());
     }
 }
