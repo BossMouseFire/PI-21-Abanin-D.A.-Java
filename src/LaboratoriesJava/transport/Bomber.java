@@ -5,7 +5,6 @@ import LaboratoriesJava.enums.BombForms;
 import LaboratoriesJava.interfaces.IBombs;
 
 import java.awt.*;
-import java.util.Objects;
 
 public class Bomber extends Plane implements Comparable<Plane> {
 

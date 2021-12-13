@@ -7,10 +7,6 @@ import LaboratoriesJava.transport.Plane;
 import LaboratoriesJava.transport.Vehicle;
 
 import java.io.*;
-import java.lang.reflect.Type;
-import java.nio.file.FileAlreadyExistsException;
-import java.security.KeyStore;
-import java.util.FormatterClosedException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -72,13 +68,9 @@ public class HangarCollection {
         FileWriter writer = new FileWriter(file, false);
         writer.write("HangarCollection\n");
 
-        for (HashMap.Entry<String, Hangar<Vehicle>> level : hangarStages.entrySet()) {
-            writer.write(String.format("Hangar%s%s\n", separator, level.getKey()));
-            ITransport plane;
-            for (int i = 0; (plane = level.getValue().getPlane(i)) != null; i++)
-            {
-                //если место не пустое
-                //Записываем тип машины
+        for (var level: hangarStages.keySet()) {
+            writer.write(String.format("Hangar%s%s\n", separator, level));
+            for (ITransport plane: hangarStages.get(level)) {
                 if (plane.getClass() == Plane.class)
                 {
                     writer.write(String.format("Plane%s", separator));
@@ -97,14 +89,11 @@ public class HangarCollection {
     public void saveDataHangar(File file, String name) throws IOException {
         FileWriter writer = new FileWriter(file, false);
         writer.write(String.format("Hangar%s%s\n", separator, name));
-        ITransport plane;
         Hangar<Vehicle> hangar = getHangar(name);
-
         if (hangar == null) {
             return;
         }
-
-        for (int i = 0; (plane = hangar.getPlane(i)) != null; i++)
+        for (ITransport plane: hangar)
         {
             if (plane.getClass() == Plane.class)
             {

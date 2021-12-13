@@ -1,15 +1,19 @@
 package LaboratoriesJava.transport;
 
 import LaboratoriesJava.enums.MovesBomber;
+import LaboratoriesJava.interfaces.ITransport;
 
 import java.awt.*;
+import java.lang.reflect.Field;
+import java.util.Iterator;
 
-public class Plane extends Vehicle implements Comparable<Plane> {
+public class Plane extends Vehicle implements Comparable<Plane>, Iterable<Field>, Iterator<Field> {
 
     protected int planeWidth = 220;
     protected int planeHeight = 138;
 
     protected final char separator = ';';
+    private int index = -1;
 
     public Plane(int maxSpeed, int weight, Color mainColor)
     {
@@ -133,5 +137,23 @@ public class Plane extends Vehicle implements Comparable<Plane> {
         return maxSpeed == plane.maxSpeed
                 && weight == plane.weight
                 && mainColor.hashCode() == plane.mainColor.hashCode();
+    }
+
+    @Override
+    public Iterator<Field> iterator() {
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (++index < this.getClass().getDeclaredFields().length) {
+            return true;
+        }
+        index = -1;
+        return false;
+    }
+    @Override
+    public Field next() {
+        return this.getClass().getDeclaredFields()[index];
     }
 }

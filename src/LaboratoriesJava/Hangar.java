@@ -7,12 +7,10 @@ import LaboratoriesJava.interfaces.ITransport;
 
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
 
-public class Hangar<T extends Object & ITransport> {
+public class Hangar<T extends Object & ITransport> implements Iterable<ITransport>, Iterator<ITransport> {
     private final List<T> _places;
 
     private final int _maxCount;
@@ -24,6 +22,8 @@ public class Hangar<T extends Object & ITransport> {
     private final int _placeSizeWidth = 223;
 
     private final int _placeSizeHeight = 140;
+
+    private int index = -1;
 
     public Hangar(int picWidth, int picHeight){
         int width = picWidth / _placeSizeWidth;
@@ -100,5 +100,24 @@ public class Hangar<T extends Object & ITransport> {
 
     public void sort() {
         _places.sort((Comparator<? super T>) new PlaneComparator());
+    }
+
+    @Override
+    public Iterator<ITransport> iterator() {
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (++index < _places.size()) {
+            return true;
+        }
+        index = -1;
+        return false;
+    }
+
+    @Override
+    public ITransport next() {
+        return _places.get(index);
     }
 }
