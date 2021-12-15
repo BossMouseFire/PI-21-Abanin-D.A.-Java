@@ -14,7 +14,18 @@ public class PlaneComparator implements Comparator<Vehicle> {
         if (x instanceof Bomber && y instanceof Bomber) {
             return compareBomber((Bomber) x, (Bomber) y);
         }
-        return comparePlane((Plane) x, (Plane) y);
+
+        if (x instanceof Bomber && y instanceof Plane) {
+            return 1;
+        }
+        if (x instanceof Plane && y instanceof Bomber) {
+            return -1;
+        }
+
+        if (x instanceof Plane && y instanceof Plane) {
+            return comparePlane((Plane) x, (Plane) y);
+        }
+        return  0;
     }
 
     private int comparePlane(Plane x, Plane y)

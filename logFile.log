@@ -1,0 +1,13 @@
+2021-12-15 12:28:36 INFO  FormHangar - Добавили парковку teest
+2021-12-15 12:30:24 INFO  FormHangar - Добавили парковку test
+2021-12-15 12:30:28 INFO  FormHangar - Добавление в ангар test самолёт 100;100;-16777216
+2021-12-15 12:30:31 INFO  FormHangar - Добавление в ангар test самолёт 100;100;-16777216;-65536;true;true;Rectangle
+2021-12-15 12:30:36 INFO  FormHangar - Добавление в ангар test самолёт 100;100;-5636093
+2021-12-15 12:30:43 WARN  FormHangar - Такой самолёт уже находится в ангаре: 100;100;-16777216;-65536;true;true;Rectangle
+2021-12-15 12:30:51 INFO  FormHangar - Добавление в ангар test самолёт 100;100;-16777216;-15688960;true;true;Rectangle
+2021-12-15 12:30:52 INFO  FormHangar - Сортировка ангара: LaboratoriesJava.Hangar@16de6cbe
+2021-12-15 12:32:21 INFO  FormHangar - Сортировка ангара: LaboratoriesJava.Hangar@16de6cbe
+2021-12-15 12:32:25 WARN  FormHangar - Такой самолёт уже находится в ангаре: 100;100;-16777216
+2021-12-15 12:32:28 WARN  FormHangar - Такой самолёт уже находится в ангаре: 100;100;-16777216;-65536;true;true;Rectangle
+2021-12-15 12:32:39 INFO  FormHangar - Добавление в ангар test самолёт 100;100;-16777216;-65536;true;true;Oval
+2021-12-15 12:32:46 WARN  FormHangar - Такой самолёт уже находится в ангаре: 100;100;-16777216;-65536;true;true;Oval
